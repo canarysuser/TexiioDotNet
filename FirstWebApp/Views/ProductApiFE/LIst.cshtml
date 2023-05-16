@@ -1,0 +1,211 @@
+﻿
+
+<div class="card shadow w-75 m-auto mt-5">
+
+    <div class="card-header bg-primary bg-opacity-50 py-2 d-flex">
+        <div id="pageHdr" class="h2 text-white text-center flex-grow-1"></div>
+        <div>
+            <button id="btnAdd" class="btn btn-danger"> Create New </button>
+            <button id="btnBack" class="btn btn-secondary"> Back To List</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Displaying the product data-->
+        <table id="productTable" class="table table-dark table-striped">
+            <thead><tr><th>Product Name</th><th>Unit Price</th><th></th></tr></thead>
+            <tbody id="tableData">
+            </tbody>
+        </table>
+        <div id="detailsDiv" class="p-2">
+            
+            <form id="form1"  >
+                <input type="hidden" id="productId" name="productId" value="0"/>
+                <div class="form-group">
+                    <label for="productName" class="control-label">Product Name</label>
+                    <input type="text" name="productName" id="productName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="unitPrice" class="control-label">Unit Price</label>
+                    <input type="text" name="unitPrice" id="unitPrice" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="unitsInStock" class="control-label">Units In Stock</label>
+                    <input type="text" name="unitsInStock" id="unitsInStock" class="form-control" />
+                </div>
+                <div class="form-group">
+                    
+                    <input type="checkbox" name="discontinued" id="discontinued" class="form-check" />
+                    <label for="unitsInStock" class="control-label">Discontinued</label>
+                </div>
+                <button id="btnSave" type="submit" class="btn btn-success">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var prodUrl = "http://localhost:5042/api/products"; 
+        $(document).ready( function() {
+            //Add the Page header
+            $("#pageHdr").html("List of Products");
+            //Handle the btnBack.Click action 
+            $("#btnBack").click(function () {
+                //hide any other div tags open, redisplay the list tag. 
+                //reload the product list
+               resetPage();
+            })
+            $("#btnBack").hide();
+            $("#btnAdd").click(function() {
+                showDetails("Create Product")
+                changeType = "C";
+            });
+            $("#productTable").show();
+            $("#detailsDiv").hide();
+            loadProducts();
+            $("#form1").submit(function(e){
+                formSubmit(e);
+            }) 
+        })
+        function showDetails( pageHeaderText ) {
+            $("#productTable").hide();
+            $("#detailsDiv").show();
+            $("#btnAdd").hide();
+            $("#btnBack").show();
+            $("#pageHdr").html(pageHeaderText);
+        }
+        function resetPage(){
+            $("#productTable").show();
+            $("#detailsDiv").hide();
+            $("#btnAdd").show();
+            $("#btnBack").hide();
+            $("#pageHdr").html("List of Products");
+            loadProducts();
+        }
+        var token = ""; 
+        async function getAuthHeaderWithToken() {
+            var authReqObj = {username:'admin', password:'admin'};
+            var authUrl = "http://localhost:5042/api/accounts"; 
+            var authBodyJson = JSON.stringify(authReqObj);
+            console.log(authBodyJson);
+            var response = await fetch(authUrl, {
+                method: "POST", body: authBodyJson, headers:{ "Content-Type":"application/json"}
+            });
+            console.log(response);
+            if(response.status==200) {
+                var result = await response.json(); 
+                console.log(result);
+                token = result.token;
+            } else 
+            {
+                alert('Unauthorized')
+            }
+        }
+        async function loadProducts() {
+
+            $("#productTable").show();
+            $("#detailsDiv").hide();
+            $("#pageHdr").html("List of Products");
+
+            //hit the server and extract the data from the API
+            console.log("url", prodUrl)
+            await getAuthHeaderWithToken();
+            var response = await fetch(prodUrl, {
+                headers: {
+                    "Authorization":"Bearer " + token
+                }
+            });
+            var result = await response.json(); 
+            //console.log(result)
+            $("#tableData").empty();
+            $.each(result, (index,value)=>{
+                //console.log(value);
+                var row = `<tr><td>${value.productName}</td><td>${value.unitPrice}</td>`;
+                row += `<td><button id='btn1' class='btn btn-sm btn-outline-info' onclick='view(${value.productId})'>View</button>`
+                row += `<button id='btn2' class='btn btn-sm btn-outline-success' onclick='edit(${value.productId})'>Edit</button>`
+                row += `<button id='btn3' class='btn btn-sm btn-outline-warning' onclick='remove(${value.productId})'>Remove</button>`
+                row += "</td></tr>"; 
+                $("#tableData").append(row);
+
+            })
+        }
+        function view(productId) { 
+            getDetails(productId);
+            changeType = "V";
+            showDetails("Product Details");
+        }
+        function edit(productId) {
+            getDetails(productId);
+            changeType = "U";
+            showDetails("Update Product");
+        }
+        function remove(productId) {
+            getDetails(productId);
+            changeType = "D";
+            showDetails("Remove Product");
+        }
+        var changeType="";
+        async function getDetails(productId) {
+            var response = await fetch(`${prodUrl}/${productId}`);
+            var result = await response.json(); 
+            $("#productId").val(result.productId);
+            $("#productName").val(result.productName);
+            $("#unitPrice").val(result.unitPrice);
+            $("#unitsInStock").val(result.unitsInStock);
+            $("#discontinued").val(result.discontinued);
+        }
+        function createProductObject() { 
+            var prodObj = {
+                productId: parseInt($("#productId").val()),
+                productName: $("#productName").val(),
+                unitPrice: parseFloat($("#unitPrice").val()),
+                unitsInStock: parseInt($("#unitsInStock").val()),
+                discontinued: $("#discontinued").val()=="ON" ? true : false
+            }
+            return prodObj;
+        }
+        async function saveChanges() { 
+            var prodObj = createProductObject(); 
+            var jsonBody = JSON.stringify(prodObj);
+            console.log(prodObj, changeType);
+            if(changeType=="C") {
+                var response = await fetch(prodUrl, {
+                    method: "POST", 
+                    body: JSON.stringify(prodObj),
+                    headers: { 
+                        "Content-Type" : "application/json"
+                    }
+                }); 
+                var result = await response.json();
+            } else if (changeType == "U") {
+                tempUrl = `${prodUrl}/${prodObj.productId}`
+                console.log(tempUrl);
+                var response = await fetch(tempUrl, {
+                    method: "PUT",
+                    body: JSON.stringify(prodObj),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                console.log(response);
+                var result = await response.json();
+            } else if (changeType == "D") {
+                var response = await fetch(`${prodUrl}/${prodObj.productId}`, {
+                    method: "DELETE"
+                });
+                var result = await response.json();
+            }
+        }
+        async function formSubmit(e) {
+            console.log("submitted");
+            e.preventDefault();
+            e.stopPropagation(); 
+            
+            await saveChanges();
+            $("#productId").val(0);
+            await resetPage();
+            changeType = "";
+            return false;
+        }
+    </script>
+}

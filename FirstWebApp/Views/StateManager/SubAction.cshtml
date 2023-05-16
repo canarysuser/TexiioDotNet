@@ -1,0 +1,22 @@
+﻿@* SUBACTION.CSHTML *@
+<div class="card shadow w-50 m-auto mt-5">
+    <div class="card-header bg-danger p-2 bg-opacity-50">
+        <h2 class="text-center text-success">State Management Sub Action Page</h2>
+    </div>
+    <div class="card-body">
+
+        <p class="lead fw-bold">View Data : <strong>@ViewData["Message"]</strong>  </p>
+        <p class="lead fw-bold">View Bag  : <strong>@ViewBag.MessageBag</strong>  </p>
+        <p class="lead fw-bold">Temp Data : <strong>@TempData["Message"]</strong>  </p>
+        <p class="lead fw-bold">Session Data : <strong>@Context.Session.GetString("Message")</strong>  </p>
+
+    </div>
+    <div class="card-footer p-2 text-center">
+        <a asp-action="SubAction" asp-route-id="0" asp-controller="StateManager" class="btn btn-lg btn-outline-success">
+            Refresh this Page
+        </a>
+        <a asp-action="Index" asp-route-id="0" asp-controller="StateManager" class="btn btn-lg btn-outline-warning">
+            Goto Main Page
+        </a>
+    </div>
+</div>

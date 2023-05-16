@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="mt-5 p-5">
+    <div class="display-2">Authentication Sample</div>
+    <div class="mt-5 p-5 border border-5">
+
+        @if (Context.Session.GetString("IsAuthenticated") == null)
+        {
+            <p class="lead">Click on the button below to authenticate the user. </p>
+            <a class="btn btn-lg btn-success" asp-action="BasicLogin"> Sign In </a>
+        } else
+        {
+            <p class="lead">Click on the signout button to logout </p>
+            <a class="btn btn-lg btn-warning" asp-action="BasicLogout"> Sign Out </a>
+        }
+
+        @if (Context.Session.GetString("IsAuthenticated") != null)
+        {
+            <p class="border border-danger bg-success bg-opacity-50 p-3 fs-4">You are Authenticated!!</p>
+        } else
+        {
+            <p class="bg-danger bg-opacity-50 p-3 fs-4">Click on the button to authenticate.</p>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<FirstWebApp.Models.Customer>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<div class="card shadow w-50 mt-5 m-auto">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1 text-center h2">List of Customers</div>
+        <div>
+            <a asp-action="Create" class="btn btn-danger">Create New</a>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.City)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Country)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                       
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompanyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Country)
+                        </td>
+                        <td>
+                            @Html.ActionLink(
+                                linkText: "Modify", 
+                                actionName: "Edit", 
+                                routeValues: new { id=item.CustomerId},
+                                htmlAttributes: new {@class="btn btn-sm btn-outline-success"}
+                            )
+                            @Html.ActionLink("Details", "Details", new { id=item.CustomerId },
+                                    new {@class="btn btn-sm btn-outline-info"})
+                            @Html.ActionLink("Remove", "Delete", new { id=item.CustomerId },
+                                new {@class="btn btn-sm btn-outline-warning"})
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

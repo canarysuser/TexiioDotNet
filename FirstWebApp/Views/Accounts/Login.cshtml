@@ -1,0 +1,29 @@
+﻿@model FirstWebApp.Models.LoginViewModel
+
+<div class="card shadow mt-5 m-auto w-50">
+    <div class="card-header bg-primary bg-opacity-75 py-3">
+        <h1 class="text-center text-white fs-3">Sign In</h1>
+    </div>
+    <div class="card-body">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="input-group mt-5">
+                <div class="input-group-text">Username</div>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="input-group mt-5">
+                <div class="input-group-text">Password</div>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-5">
+                <input asp-for="RememberMe" class="form-check-input mr-2" />
+                <label class="form-check-text ">Remember Me</label>
+            </div>
+            <div class="mt-5 text-end">
+                <input type="submit" value="Sign In" class="btn btn-success"/>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+﻿@model FirstWebApp.Models.Customer
+@* Strongly typed view - View is bound with a Model Type *@
+
+<div class="card shadow w-50 mt-5 m-auto border border-danger">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1 text-center h2">Delete Customer</div>
+        <div>
+            <a asp-action="List" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6"><span class="fw-bold">Customer Id</span></div>
+            <div class="col-6"><span class="text-success">@Model.CustomerId</span></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><span class="fw-bold">Company Name</span></div>
+            <div class="col-6"><span class="text-success">@Model.CompanyName</span></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><span class="fw-bold">Contact Name</span></div>
+            <div class="col-6"><span class="text-success">@Model.ContactName</span></div>
+        </div>
+        <div class="row">
+            <div class="col-6 "><span class="fw-bold">City</span></div>
+            <div class="col-6"><span class="text-success">@Model.City</span></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><span class="fw-bold">Country</span></div>
+            <div class="col-6"><span class="text-success">@Model.Country</span></div>
+        </div>
+        
+    </div>
+    <div class="card-footer bg-danger bg-opacity-25">
+        <p class="lead fw-bold">Are you sure you want to remove this record? </p>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" value="@Model.CustomerId" name="id" id="id"/>
+            <input type="submit" value="Yes" class="btn btn-danger"/>
+            <input type="reset" value="No" class="btn btn-outline-secondary"/>
+        </form>
+    </div>
+</div>

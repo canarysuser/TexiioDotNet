@@ -1,0 +1,59 @@
+﻿@model FirstWebApp.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="card shadow w-50 mt-5 m-auto">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1 text-center h2">Update Customer Details</div>
+        <div>
+            <a asp-action="List" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="CustomerId" class="control-label"></label>
+                        <input asp-for="CustomerId" class="form-control" readonly/>
+                        <span asp-validation-for="CustomerId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CompanyName" class="control-label"></label>
+                        <input asp-for="CompanyName" class="form-control" />
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ContactName" class="control-label"></label>
+                        <input asp-for="ContactName" class="form-control" />
+                        <span asp-validation-for="ContactName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Country" class="control-label"></label>
+                        <input asp-for="Country" class="form-control" />
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
